@@ -1,6 +1,12 @@
 <?php
 require_once __DIR__ . '/../includes/session.php';
+
+if (!isset($_SESSION["user_id"])) {
+    header("Location: signin.php");
+    exit;
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,8 +16,13 @@ require_once __DIR__ . '/../includes/session.php';
     <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
-    <?php include __DIR__ . '/menubar.php'; ?>
-    <h1>About SocialNet</h1>
-    <p>This page will describe the project later.</p>
+
+    <?php include 'menubar.php'; ?>
+
+    <h1>About</h1>
+
+    <p><strong>Student Name:</strong> Vu Duc Tam</p>
+    <p><strong>Student Number:</strong> 1695881</p>
+
 </body>
 </html>

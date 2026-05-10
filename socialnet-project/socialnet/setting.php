@@ -1,6 +1,42 @@
 <?php
 require_once __DIR__ . '/../includes/session.php';
+require_once __DIR__ . '/../includes/db.php';
+
+if (!isset($_SESSION["user_id"])) {
+    header("Location: signin.php");
+    exit;
+}
+
+$message = "";
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+
+    $description = trim($_POST["description"]);
+    $username = $_SESSION["username"];
+
+    $sql = "UPDATE account SET description = ? WHERE username = ?";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $description, $username);
+
+    if ($stmt->execute()) {
+        $message = "Profile updated successfully.";
+    } else {
+        $message = "Failed to update profile.";
+    }
+}
+
+$username = $_SESSION["username"];
+
+$sql = "SELECT fullname, description FROM account WHERE username = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("s", $username);
+$stmt->execute();
+
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,8 +46,35 @@ require_once __DIR__ . '/../includes/session.php';
     <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
-    <?php include __DIR__ . '/menubar.php'; ?>
+
+    <?php include 'menubar.php'; ?>
+
     <h1>Settings</h1>
-    <p>Account settings will be added here later.</p>
+
+    <p><strong>Username:</strong> <?php echo htmlspecialchars($_SESSION["username"]); ?></p>
+
+    <p><strong>Full Name:</strong> <?php echo htmlspecialchars($user["fullname"]); ?></p>
+
+    <?php if (!empty($message)): ?>
+        <p><?php echo htmlspecialchars($message); ?></p>
+    <?php endif; ?>
+
+    <form method="POST">
+
+        <label>Profile Description</label>
+        <br><br>
+
+        <textarea
+            name="description"
+            rows="8"
+            cols="60"
+        ><?php echo htmlspecialchars($user["description"] ?? ""); ?></textarea>
+
+        <br><br>
+
+        <button type="submit">Save Changes</button>
+
+    </form>
+
 </body>
 </html>

@@ -1,10 +1,8 @@
-<?php
-?>
-<nav class="menu-bar">
+<nav>
     <a href="index.php">Home</a>
+    <a href="setting.php">Setting</a>
     <a href="profile.php">Profile</a>
-    <a href="setting.php">Settings</a>
     <a href="about.php">About</a>
-    <a href="signin.php">Sign In</a>
-    <a href="signout.php">Sign Out</a>
+    <a href="signout.php">SignOut</a>
 </nav>
+<hr>
